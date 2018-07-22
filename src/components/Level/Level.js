@@ -16,10 +16,10 @@ export default class Level extends React.PureComponent {
   samples = Object.values(GameGenerator.samples).concat(Metronome.sample);
 
   render() {
-    const { game, hits, level, onAction, onRoundStart, round, settings, visualDelay } = this.props;
+    const { game, hits, level, onAction, onBufferLoad, onRoundStart, round, settings, visualDelay } = this.props;
 
     return (
-      <SampleLoader bpm={game.bpm} samples={this.samples}>
+      <SampleLoader bpm={game.bpm} onBufferLoad={onBufferLoad} samples={this.samples}>
         <Metronome bpm={game.bpm}/>
         <Counter
           {...game}

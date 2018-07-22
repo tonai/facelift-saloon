@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { playSound } from '../../services/playSound';
+
 export default class Action extends React.PureComponent {
 
   static defaultProps = {
@@ -27,28 +29,20 @@ export default class Action extends React.PureComponent {
 
     let timeDelta;
     let bpmIncrement = 1;
-    const eventHit = events.find((event, i) => {
+    const eventHit = events.find(event => {
       timeDelta = Math.abs(bpmIncrement * delta - time);
       bpmIncrement += event.delta;
       return timeDelta < accuracy && event.hit === false && (!settings || settings[event.type] === code);
     });
 
     if (eventHit) {
-      this.playSound(buffers[eventHit.sample]);
+      playSound(buffers[eventHit.sample]);
       eventHit.hit = timeDelta;
     }
 
     if (onAction) {
       onAction(eventHit, time, level, accuracy, timeDelta);
     }
-  };
-
-  playSound(buffer, time = 0) {
-    const { context } = this.props;
-    const source = context.createBufferSource();
-    source.buffer = buffer;
-    source.connect(context.destination);
-    source.start(time);
   };
 
   render() {

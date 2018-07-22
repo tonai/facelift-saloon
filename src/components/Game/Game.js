@@ -2,6 +2,7 @@ import React from 'react';
 
 import { ICON_DIR } from '../../settings/settings';
 import GameGenerator from '../../classes/GameGenerator';
+import { playSound } from '../../services/playSound';
 
 import Level from '../Level/Level';
 import Header from '../Header/Header';
@@ -12,10 +13,12 @@ import './Game.css';
 export default class Game extends React.PureComponent {
 
   animationDelay = 100;
+  buffers = [];
   game = null;
   gameGenerator = null;
   maxLevel = 9;
   rounds = 2;
+  start = 0;
   state = {
     exitAnimation: false,
     hits: [],
@@ -73,6 +76,37 @@ export default class Game extends React.PureComponent {
     }));
   };
 
+  handleBufferLoad = (buffers) => {
+    this.buffers = buffers;
+  };
+
+  handleClick(name) {
+    const { accuracy, bpm, events } = this.game;
+    const { level } = this.state;
+
+    if (this.start === 0) {
+      return;
+    }
+
+    const delta = 60 / bpm * 1000;
+    const time = performance.now() - this.start;
+
+    let timeDelta;
+    let bpmIncrement = 1;
+    const eventHit = events.find(event => {
+      timeDelta = Math.abs(bpmIncrement * delta - time);
+      bpmIncrement += event.delta;
+      return timeDelta < accuracy && event.hit === false && event.type === name;
+    });
+
+    if (eventHit) {
+      playSound(this.buffers[eventHit.sample]);
+      eventHit.hit = timeDelta;
+    }
+
+    this.handleAction(eventHit, time, level, accuracy, timeDelta);
+  }
+
   handleExitAnimationEnd = () => {
     if (this.state.round === this.rounds) {
       this.timer = setTimeout(this.nextLevel, this.animationDelay);
@@ -82,6 +116,7 @@ export default class Game extends React.PureComponent {
   };
 
   handleExitAnimationStart = () => {
+    this.start = 0;
     this.setState({
       exitAnimation: true
     });
@@ -94,7 +129,8 @@ export default class Game extends React.PureComponent {
     }
   };
 
-  handleRoundStart = () => {
+  handleRoundStart = (start) => {
+    this.start = start;
     this.timer = setTimeout(this.handleExitAnimationStart, this.game.duration);
   };
 
@@ -149,6 +185,7 @@ export default class Game extends React.PureComponent {
                 hits={hits}
                 level={level}
                 onAction={this.handleAction}
+                onBufferLoad={this.handleBufferLoad}
                 onRoundStart={this.handleRoundStart}
                 settings={settings}
                 visualDelay={20}
@@ -158,7 +195,7 @@ export default class Game extends React.PureComponent {
           <div className="Game__icons">
             {this.getIcons().map(({ color, icon, name }) => (
               <div className="Game__icon-item" key={name}>
-                <div className="Game__icon-content">
+                <div className="Game__icon-content" onClick={this.handleClick.bind(this, name)}>
                   <div className="Game__icon-bg" style={{ backgroundColor: color }}/>
                   <img
                     className="Game__icon"

@@ -2,6 +2,7 @@ import React from 'react';
 
 import { SAMPLE_DIR } from '../../settings/settings';
 import AudioContext from '../../classes/AudioContext';
+import { setContext } from '../../services/playSound';
 
 export default class SampleLoader extends React.PureComponent {
 
@@ -30,11 +31,16 @@ export default class SampleLoader extends React.PureComponent {
   };
 
   setBufferList = (bufferList) => {
+    const { onBufferLoad } = this.props;
     this.bufferList = this.props.samples
       .reduce((acc, sample, index) => {
         acc[sample] = bufferList[index];
         return acc;
       }, {});
+    setContext(this.audioContext);
+    if (onBufferLoad) {
+      onBufferLoad(this.bufferList);
+    }
   };
 
   start = () => {
@@ -59,7 +65,6 @@ export default class SampleLoader extends React.PureComponent {
       .map((child, index) => React.cloneElement(child, {
         ...child.props,
         buffers: this.bufferList,
-        context: this.audioContext.context,
         key: index
       }))
   };

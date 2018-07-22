@@ -1,11 +1,12 @@
 import React from 'react';
 
+import { playSound } from '../../services/playSound';
+
 export default class Metronome extends React.PureComponent {
 
   static defaultProps = {
     bpm: 100,
-    buffers: {},
-    context: null
+    buffers: {}
   };
 
   static sample = 'E808_RS-03.wav';
@@ -14,21 +15,13 @@ export default class Metronome extends React.PureComponent {
 
   componentDidMount() {
     const { bpm, buffers } = this.props;
-    this.playSound(buffers[Metronome.sample]);
-    this.timer = setInterval(this.playSound.bind(this, buffers[Metronome.sample]), 60 / bpm * 1000);
+    playSound(buffers[Metronome.sample]);
+    this.timer = setInterval(playSound.bind(this, buffers[Metronome.sample]), 60 / bpm * 1000);
   }
 
   componentWillUnmount() {
     clearInterval(this.timer);
   }
-
-  playSound(buffer, time = 0) {
-    const { context } = this.props;
-    const source = context.createBufferSource();
-    source.buffer = buffer;
-    source.connect(context.destination);
-    source.start(time);
-  };
 
   render() {
     return null

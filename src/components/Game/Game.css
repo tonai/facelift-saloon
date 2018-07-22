@@ -51,6 +51,7 @@
   padding: 15px;
   width: 100%;
   position: relative;
+  cursor: pointer;
 }
 
 .Game__icon-bg {
@@ -61,6 +62,10 @@
   bottom: 0;
   border-radius: 50%;
   opacity: 0.5;
+}
+
+.Game__icon-content:hover .Game__icon-bg {
+  opacity: 0.8;
 }
 
 .Game__icon {
