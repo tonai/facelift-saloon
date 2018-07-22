@@ -5,18 +5,23 @@ import GameGenerator from '../../classes/GameGenerator';
 
 import Level from '../Level/Level';
 import Header from '../Header/Header';
+import People from '../People/People';
 
 import './Game.css';
+
 export default class Game extends React.PureComponent {
 
+  animationDelay = 100;
   game = null;
   gameGenerator = null;
   maxLevel = 9;
-  rounds = 1;
+  rounds = 2;
   state = {
+    exitAnimation: false,
+    hits: [],
     level: 1,
     play: false,
-    round: 0
+    round: 0,
   };
   timer = null;
 
@@ -31,16 +36,10 @@ export default class Game extends React.PureComponent {
     });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.round === this.rounds && this.state.round > this.rounds) {
-      this.handleNextLevel();
-    }
-  }
-
   componentWillUpdate(nextProps, nextState) {
-    const { level, round } = this.state;
+    const { round } = this.state;
     if (nextState.round !== round) {
-      this.game = this.gameGenerator.generate(level);
+      this.game = this.gameGenerator.generate(nextState.level);
     }
   }
 
@@ -60,19 +59,35 @@ export default class Game extends React.PureComponent {
     return icons;
   };
 
-  handleNextLevel = () => {
-    const { level } = this.state;
-    if (level < this.maxLevel) {
-      this.setState(state => ({
-        level: state.level + 1,
-        play: false,
-        round: 1
-      }));
+  handleAction = (event, time, level, accuracy, timeDelta) => {
+    const { onScore } = this.props;
+    if (onScore && event) {
+      onScore(level, accuracy, timeDelta);
+    }
+    this.setState(state => ({
+      hits: [
+        ...state.hits,
+        { time, event },
+      ]
+    }));
+  };
+
+  handleExitAnimationEnd = () => {
+    if (this.state.round === this.rounds) {
+      this.timer = setTimeout(this.nextLevel, this.animationDelay);
+    } else {
+      this.timer = setTimeout(this.nextRound, this.animationDelay);
     }
   };
 
+  handleExitAnimationStart = () => {
+    this.setState({
+      exitAnimation: true
+    });
+  };
+
   handleRoundStart = () => {
-    this.timer = setTimeout(this.nextRound, this.game.duration);
+    this.timer = setTimeout(this.handleExitAnimationStart, this.game.duration);
   };
 
   handleStart = () => {
@@ -81,33 +96,57 @@ export default class Game extends React.PureComponent {
     });
   };
 
+  nextLevel = () => {
+    const { level } = this.state;
+    if (level < this.maxLevel) {
+      this.setState(state => ({
+        exitAnimation: false,
+        hits: [],
+        level: state.level + 1,
+        play: false,
+        round: 1
+      }));
+    }
+  };
 
   nextRound = () => {
     const { round } = this.state;
     if ( round <= this.rounds ) {
       this.setState(state => ({
+        exitAnimation: false,
+        hits: [],
         round: state.round + 1
       }));
     }
   };
 
   render() {
-    const { onHome, onScore, score, settings } = this.props;
-    const { level, play, round } = this.state;
+    const { onHome, score, settings } = this.props;
+    const { exitAnimation, hits, level, play, round } = this.state;
 
     return (
       <div className="Game">
         <Header onHome={onHome} score={score} title={`Level ${level}`} />
         <div className="Game__stage">
           {!play && <button className="Game__start" onClick={this.handleStart}> Are you ready ? </button>}
-          {play && round && round <= this.rounds &&  <Level
-            game={this.game}
-            level={level}
-            onScore={onScore}
-            onRoundStart={this.handleRoundStart}
-            settings={settings}
-            visualDelay={20}
-          />}
+          {play && round && (
+            <People
+              exitAnimation={exitAnimation}
+              game={this.game}
+              hits={hits}
+              onAnimationEnd={this.handleExitAnimationEnd}
+            >
+              <Level
+                game={this.game}
+                hits={hits}
+                level={level}
+                onAction={this.handleAction}
+                onRoundStart={this.handleRoundStart}
+                settings={settings}
+                visualDelay={20}
+              />
+            </People>
+          )}
           <div className="Game__icons">
             {this.getIcons().map(({ color, icon, name }) => (
               <div className="Game__icon-item" key={name}>

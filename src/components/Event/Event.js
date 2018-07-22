@@ -17,12 +17,17 @@ export default class Event extends React.PureComponent {
           width: `${accuracy * 2 / duration * 100}%`
         }}
       >
-        <div className="Event__area"  style={{ backgroundColor: event.color }}/>
-        {icon && (<img
-          className="Event__icon"
-          src={`${ICON_DIR}${event.icon}`}
-          alt={event.type}
-        />)}
+        <div className="Event__area" style={{ backgroundColor: event.color }}/>
+        {icon && (
+          <div className="Event__icon-content">
+            <div className="Event__icon-bg" style={{ backgroundColor: event.color }}/>
+            <img
+              className="Event__icon"
+              src={`${ICON_DIR}${event.icon}`}
+              alt={event.type}
+            />
+          </div>
+          )}
       </div>
     );
   }

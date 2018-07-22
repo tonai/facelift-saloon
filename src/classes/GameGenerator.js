@@ -35,31 +35,32 @@ export default class GameGenerator {
     const accuracy = this.getInvertedLevelValue(level, GameGenerator.minAccuracy, GameGenerator.maxAccuracy);
     const bpm = this.getLevelValue(level, GameGenerator.minBpm, GameGenerator.maxBpm);
     const events = this.getEvents(level);
+
+    const body = this.getBody(level);
+    const face = this.getFace(level);
+    const eyes = this.getEyes(level);
+    const hair = this.getHair(level);
+    const mouth = this.getMouth(level);
+    const nose = this.getNose(level);
+
     const duration = (events.length + 1) * 60 / bpm * 1000;
+
     return {
       accuracy,
+      body,
       bpm,
       duration,
-      events
+      events,
+      eyes,
+      face,
+      hair,
+      mouth,
+      nose
     };
   }
 
-  settings(bpm) {
-    const level = 1;
-    const accuracy = this.getInvertedLevelValue(level, GameGenerator.minAccuracy, GameGenerator.maxAccuracy);
-    const events = [
-      ...this.getLiftingEvent(level),
-      ...this.getLiftingEvent(level),
-      ...this.getLiftingEvent(level),
-      ...this.getLiftingEvent(level)
-    ];
-    const duration = (events.length + 1) * 60 / bpm * 1000;
-    return {
-      accuracy,
-      bpm,
-      duration,
-      events
-    };
+  getBody() {
+    return 'BodyA.png';
   }
 
   getEvents(level) {
@@ -85,6 +86,22 @@ export default class GameGenerator {
     }, []);
   }
 
+  getEyes() {
+    return {
+      angry: 'EyesAngryA.png',
+      happy: 'EyesHappyA.png',
+      normal: 'EyesNormalA.png'
+    };
+  }
+
+  getFace() {
+    return 'FaceA.png';
+  }
+
+  getHair() {
+    return 'HairA.png';
+  }
+
   getInvertedLevelValue(level, minValue, maxValue) {
     return maxValue - (level - GameGenerator.minLevel) * (maxValue - minValue) / (GameGenerator.maxLevel - GameGenerator.minLevel);
   }
@@ -96,20 +113,54 @@ export default class GameGenerator {
   getLiftingEvent(level) {
     return [
       {
+        asset: 'WrinklesLeftA.png',
         color: GameGenerator.colors.lifting,
         delta: 1,
+        hit: false,
         icon: GameGenerator.icons.lifting,
         sample: GameGenerator.samples.lifting,
         type: 'lifting',
       },
       {
+        asset: 'WrinklesRightA.png',
         color: GameGenerator.colors.lifting,
         delta: 1,
+        hit: false,
         icon: GameGenerator.icons.lifting,
         sample: GameGenerator.samples.lifting,
         type: 'lifting',
       }
     ];
+  }
+
+  getMouth() {
+    return {
+      angry: 'MouthAngryA.png',
+      happy: 'MouthHappyA.png',
+      normal: 'MouthNormalA.png'
+    };
+  }
+
+  getNose() {
+    return 'NoseA.png';
+  }
+
+  settings(bpm) {
+    const level = 1;
+    const accuracy = this.getInvertedLevelValue(level, GameGenerator.minAccuracy, GameGenerator.maxAccuracy);
+    const events = [
+      ...this.getLiftingEvent(level),
+      ...this.getLiftingEvent(level),
+      ...this.getLiftingEvent(level),
+      ...this.getLiftingEvent(level)
+    ];
+    const duration = (events.length + 1) * 60 / bpm * 1000;
+    return {
+      accuracy,
+      bpm,
+      duration,
+      events
+    };
   }
 
 }

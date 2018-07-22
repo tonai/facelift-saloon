@@ -11,6 +11,7 @@ export default class Counter extends React.PureComponent {
 
   static defaultProps = {
     bpm: 100,
+    hits: [],
     level: 1,
     round: 1
   };
@@ -20,7 +21,6 @@ export default class Counter extends React.PureComponent {
   state = {
     counter: 4,
     display: false,
-    hits: [],
     stop: false
   };
   timer = null;
@@ -41,7 +41,7 @@ export default class Counter extends React.PureComponent {
       this.timer = setTimeout(this.decrement, 60 / bpm * 1000);
     }
     if (prevState.counter !== this.state.counter) {
-      setTimeout(() =>  this.setState({
+      this.timer = setTimeout(() =>  this.setState({
         display: true,
       }), 0);
     }
@@ -75,22 +75,9 @@ export default class Counter extends React.PureComponent {
     }));
   };
 
-  handleAction = (event, time, level, accuracy, timeDelta) => {
-    const { onScore } = this.props;
-    if (onScore && event) {
-      onScore(level, accuracy, timeDelta);
-    }
-    this.setState(state => ({
-      hits: [
-        ...state.hits,
-        { time, event },
-      ]
-    }));
-  };
-
   render() {
-    const { level, settings } = this.props;
-    const { counter, display, hits, stop } = this.state;
+    const { hits, level, onAction, settings } = this.props;
+    const { counter, display, stop } = this.state;
 
     return (
       <div className="Counter">
@@ -124,7 +111,7 @@ export default class Counter extends React.PureComponent {
         {counter <= 0 && (<Action
           {...this.props}
           level={level}
-          onAction={this.handleAction}
+          onAction={onAction}
           settings={settings}
           start={this.start}
         />)}

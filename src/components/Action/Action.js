@@ -11,16 +11,6 @@ export default class Action extends React.PureComponent {
     start: 0
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      events: props.events.map(event => ({
-        ...event,
-        hit: false
-      }))
-    }
-  }
-
   componentDidMount() {
     window.addEventListener('keydown', this.handleAction);
   }
@@ -30,17 +20,14 @@ export default class Action extends React.PureComponent {
   }
 
   handleAction = (event) => {
-    const { accuracy, bpm, buffers, level, onAction, settings, start } = this.props;
-    const { events } = this.state;
+    const { accuracy, bpm, buffers, events, level, onAction, settings, start } = this.props;
     const { code } = event;
     const delta = 60 / bpm * 1000;
     const time = performance.now() - start;
 
-    let index;
     let timeDelta;
     let bpmIncrement = 1;
     const eventHit = events.find((event, i) => {
-      index = i;
       timeDelta = Math.abs(bpmIncrement * delta - time);
       bpmIncrement += event.delta;
       return timeDelta < accuracy && event.hit === false && (!settings || settings[event.type] === code);
@@ -48,16 +35,7 @@ export default class Action extends React.PureComponent {
 
     if (eventHit) {
       this.playSound(buffers[eventHit.sample]);
-      this.setState((state) => ({
-        events: [
-          ...state.events.slice(0, index),
-          {
-            ...eventHit,
-            hit: timeDelta
-          },
-          ...state.events.slice(index + 1)
-        ]
-      }));
+      eventHit.hit = timeDelta;
     }
 
     if (onAction) {
