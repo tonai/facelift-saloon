@@ -69,6 +69,7 @@ export default class People extends React.PureComponent {
             {this.renderAsset(game.eyes.normal)}
             {this.renderAsset(game.mouth.normal)}
             {game.hair && this.renderAsset(game.hair)}
+            {this.renderWart(game, hitEvents)}
             {this.renderHair(game, hitEvents)}
             {this.renderBeard(game, hitEvents)}
           </div>
@@ -98,6 +99,13 @@ export default class People extends React.PureComponent {
       .filter(event => event.type === 'hair')
       .find(event => hitEvents.indexOf(event) !== -1);
     return event ? this.renderAsset(event.asset) : null;
+  }
+
+  renderWart(game, hitEvents) {
+    return game.events
+      .filter(event => event.type === 'wart')
+      .filter(event => hitEvents.indexOf(event) === -1)
+      .map((event, index) => this.renderAsset(event.asset, index));
   }
 
   renderWrinkles(game, hitEvents) {

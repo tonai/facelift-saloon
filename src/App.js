@@ -13,7 +13,7 @@ export default class App extends React.PureComponent {
       beard: 'Digit3',
       hair: 'Digit2',
       lifting: 'Digit1',
-      // wart: 'Digit2'
+      wart: 'Digit4'
     };
     const settings = this.getSettings();
     this.state = {

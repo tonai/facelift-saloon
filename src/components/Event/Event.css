@@ -40,3 +40,9 @@
   position: relative;
   z-index: 1;
 }
+
+@media (max-width: 650px) {
+  .Event__icon-content {
+    width: 20px;
+  }
+}

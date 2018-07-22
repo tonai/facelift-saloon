@@ -16,26 +16,28 @@ export default class GameGenerator {
     beard: 'green',
     hair: 'blue',
     lifting: 'red',
+    wart: 'yellow',
   };
 
   static icons = {
     beard: 'beard.svg',
     hair: 'hair.svg',
     lifting: 'clothespin.svg',
-    // wart: 'scalpel.svg',
+    wart: 'scalpel.svg',
   };
 
   static order = {
     beard: 3,
     hair: 2,
     lifting: 1,
-    // wart: 4
+    wart: 4,
   };
 
   static samples = {
     beard: 'Pop 03.wav',
     hair: 'Boing 07.wav',
     lifting: 'Reaction 08.wav',
+    wart: 'Pop 03.wav',
   };
 
   generate(level) {
@@ -81,17 +83,18 @@ export default class GameGenerator {
   getEvents(level) {
     const eventLength = Math.max(GameGenerator.minEvent, Math.min(GameGenerator.maxEvent, level));
 
+    let beardEvents = [];
     let liftingEvents = [];
     let hairEvents = [];
+    let wartEvents = [];
 
-    let beardEvents = [];
     let hasHair = true;
     let hasBeard = true;
 
     switch(eventLength) {
       default:
-      case 5: // eslint-disable-line no-fallthrough
       case 4: // eslint-disable-line no-fallthrough
+        wartEvents = this.getEventWart(level);
       case 3: // eslint-disable-line no-fallthrough
         hasBeard = Math.random() > 0.5;
         beardEvents = hasBeard ? this.getEventBeard(level) : [];
@@ -104,7 +107,10 @@ export default class GameGenerator {
     }
 
     return {
-      events: liftingEvents.concat(hairEvents).concat(beardEvents),
+      events: liftingEvents
+        .concat(hairEvents)
+        .concat(beardEvents)
+        .concat(wartEvents),
       hasBeard,
       hasHair
     };
@@ -116,8 +122,8 @@ export default class GameGenerator {
 
     switch(eventLength) {
       default:
-      case 5: // eslint-disable-line no-fallthrough
       case 4: // eslint-disable-line no-fallthrough
+        events = events.concat(this.getEventWart(level, 1));
       case 3: // eslint-disable-line no-fallthrough
         events = events.concat(this.getEventBeard(level));
       case 2: // eslint-disable-line no-fallthrough
@@ -190,6 +196,57 @@ export default class GameGenerator {
         type: 'lifting',
       }
     ];
+  }
+
+  getEventWart(level, noRandom) {
+    const random = noRandom || Math.random();
+    const wartA = {
+      asset: 'WartA.png',
+      color: GameGenerator.colors.wart,
+      delta: 1,
+      hit: false,
+      icon: GameGenerator.icons.wart,
+      sample: GameGenerator.samples.wart,
+      type: 'wart',
+    };
+    const wartB = {
+      asset: 'WartB.png',
+      color: GameGenerator.colors.wart,
+      delta: 1,
+      hit: false,
+      icon: GameGenerator.icons.wart,
+      sample: GameGenerator.samples.wart,
+      type: 'wart',
+    };
+    const wartC = {
+      asset: 'WartC.png',
+      color: GameGenerator.colors.wart,
+      delta: 1,
+      hit: false,
+      icon: GameGenerator.icons.wart,
+      sample: GameGenerator.samples.wart,
+      type: 'wart',
+    };
+    if (random > 0.8) {
+      return [wartA, wartB, wartC];
+    } else if (random > 0.6) {
+      const random = Math.random();
+      if (random > 0.666) {
+        return [wartA, wartB];
+      } else if (random > 0.333) {
+        return [wartA, wartC];
+      }
+      return [wartB, wartC];
+    } else if (random > 0.4) {
+      const random = Math.random();
+      if (random > 0.666) {
+        return [wartA];
+      } else if (random > 0.333) {
+        return [wartB];
+      }
+      return [wartC];
+    }
+    return [];
   }
 
   getFace() {
