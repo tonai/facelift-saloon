@@ -1,4 +1,6 @@
 import React from 'react';
+
+import { SAMPLE_DIR } from '../../settings/settings';
 import AudioContext from '../../classes/AudioContext';
 
 export default class SampleLoader extends React.PureComponent {
@@ -10,7 +12,6 @@ export default class SampleLoader extends React.PureComponent {
 
   audioContext = null;
   bufferList = [];
-  sampleDir = '/samples/';
   state = {
     start: false
   };
@@ -20,7 +21,7 @@ export default class SampleLoader extends React.PureComponent {
   }
 
   init = () => {
-    const samples = this.props.samples.map(sample => `${this.sampleDir}${sample}`);
+    const samples = this.props.samples.map(sample => `${SAMPLE_DIR}${sample}`);
     this.audioContext = new AudioContext(samples);
     this.audioContext
       .load()
@@ -50,7 +51,6 @@ export default class SampleLoader extends React.PureComponent {
 
   renderChildren = () => {
     let { children } = this.props;
-    const { start } = this.state;
     if (!(children instanceof Array)) {
       children = [children];
     }

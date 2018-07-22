@@ -47,7 +47,7 @@ export default class Action extends React.PureComponent {
     });
 
     if (eventHit) {
-      this.playSound(buffers[this.props[eventHit.type]]);
+      this.playSound(buffers[eventHit.sample]);
       this.setState((state) => ({
         events: [
           ...state.events.slice(0, index),

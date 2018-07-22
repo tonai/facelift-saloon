@@ -16,6 +16,20 @@ export default class GameGenerator {
     lifting: 'red'
   };
 
+  static icons = {
+    lifting: 'clothespin.svg',
+    wart: 'scalpel.svg'
+  };
+
+  static order = {
+    lifting: 1,
+    wart: 2
+  };
+
+  static samples = {
+    lifting: 'Reaction 08.wav'
+  };
+
   generate(level) {
     level = Math.max(GameGenerator.minLevel, Math.min(GameGenerator.maxLevel, level));
     const accuracy = this.getInvertedLevelValue(level, GameGenerator.minAccuracy, GameGenerator.maxAccuracy);
@@ -62,6 +76,15 @@ export default class GameGenerator {
     }
   }
 
+  getEventsDistinct(level) {
+    return this.getEvents(level).reduce((acc, event) => {
+      if (acc.indexOf(event.type) === -1) {
+        acc = acc.concat(event.type);
+      }
+      return acc;
+    }, []);
+  }
+
   getInvertedLevelValue(level, minValue, maxValue) {
     return maxValue - (level - GameGenerator.minLevel) * (maxValue - minValue) / (GameGenerator.maxLevel - GameGenerator.minLevel);
   }
@@ -75,11 +98,15 @@ export default class GameGenerator {
       {
         color: GameGenerator.colors.lifting,
         delta: 1,
+        icon: GameGenerator.icons.lifting,
+        sample: GameGenerator.samples.lifting,
         type: 'lifting',
       },
       {
         color: GameGenerator.colors.lifting,
         delta: 1,
+        icon: GameGenerator.icons.lifting,
+        sample: GameGenerator.samples.lifting,
         type: 'lifting',
       }
     ];

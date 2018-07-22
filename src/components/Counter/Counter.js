@@ -105,6 +105,7 @@ export default class Counter extends React.PureComponent {
           accuracy={this.props.accuracy}
           bpm={this.props.bpm}
           duration={this.props.duration}
+          icon
           events={this.props.events}
         >
           {counter <= 0 && (<Progress

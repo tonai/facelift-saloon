@@ -5,16 +5,17 @@ export default class Metronome extends React.PureComponent {
   static defaultProps = {
     bpm: 100,
     buffers: {},
-    context: null,
-    sample: null
+    context: null
   };
+
+  static sample = 'E808_RS-03.wav';
 
   timer = null;
 
   componentDidMount() {
-    const { bpm, buffers, sample } = this.props;
-    this.playSound(buffers[sample]);
-    this.timer = setInterval(this.playSound.bind(this, buffers[sample]), 60 / bpm * 1000);
+    const { bpm, buffers } = this.props;
+    this.playSound(buffers[Metronome.sample]);
+    this.timer = setInterval(this.playSound.bind(this, buffers[Metronome.sample]), 60 / bpm * 1000);
   }
 
   componentWillUnmount() {

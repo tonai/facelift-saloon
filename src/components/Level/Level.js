@@ -1,7 +1,6 @@
 import React from 'react';
 
 import GameGenerator from '../../classes/GameGenerator';
-import samples  from '../../settings/samples';
 
 import Metronome from '../Metronome/Metronome';
 import SampleLoader from '../SampleLoader/SampleLoader';
@@ -16,6 +15,7 @@ export default class Level extends React.PureComponent {
 
   game = null;
   gameGenerator = null;
+  samples = Object.values(GameGenerator.samples).concat(Metronome.sample);
   state = {
     round: 1
   };
@@ -55,19 +55,14 @@ export default class Level extends React.PureComponent {
   render() {
     const { level, onScore, rounds, settings, visualDelay } = this.props;
     const { round } = this.state;
-    const gameSamples = {
-      lifting: samples.reaction,
-      metronome: samples.toc
-    };
 
     if ( round <= rounds ) {
       this.game = this.gameGenerator.generate(level);
       return (
-        <SampleLoader bpm={this.game.bpm} samples={Object.values(gameSamples)}>
-          <Metronome bpm={this.game.bpm} sample={gameSamples.metronome}/>
+        <SampleLoader bpm={this.game.bpm} samples={this.samples}>
+          <Metronome bpm={this.game.bpm}/>
           <Counter
             {...this.game}
-            {...gameSamples}
             level={level}
             onRoundStart={this.handleRoundStart}
             onScore={onScore}

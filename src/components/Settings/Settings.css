@@ -35,8 +35,8 @@
 .Settings__label,
 .Settings__field {
   flex: 1;
-  text-align: center;
-  margin: 10px 0;
+  text-align: left;
+  margin: 10px;
 }
 
 .Settings__input {
@@ -61,4 +61,8 @@
 .Settings__text {
   padding: 10px;
   margin-top: 20px;
+}
+
+.Settings__icon {
+  height: 40px;
 }

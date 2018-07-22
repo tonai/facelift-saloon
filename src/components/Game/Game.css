@@ -29,3 +29,42 @@
 .Game__start:hover {
   background-color: rgba(255, 0, 0, 15);
 }
+
+.Game__icons {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 50px;
+  width: 100px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.Game__icon-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.Game__icon-content {
+  padding: 10px;
+  width: 100%;
+  position: relative;
+}
+
+.Game__icon-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  opacity: 0.5;
+}
+
+.Game__icon {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+}

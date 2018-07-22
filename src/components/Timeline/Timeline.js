@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Event from '../Event/Event';
+
 import './Timeline.css';
 
 export default class Timeline extends React.PureComponent {
@@ -12,22 +14,21 @@ export default class Timeline extends React.PureComponent {
   };
 
   getEvents = () => {
-    const { accuracy, bpm, duration, events } = this.props;
-    const delta = 60 / bpm * 1000;
-    let bpmIncrement = 1;
+    const { accuracy, bpm, duration, events, icon } = this.props;
+    let bpmPos = 1;
     return events.map((event, index) => {
       const area = (
-        <div
-          className="Timeline__event"
+        <Event
           key={`event-${index}`}
-          style={{
-            backgroundColor: event.color,
-            left: `${(bpmIncrement * delta / duration - accuracy / duration) * 100}%`,
-            width: `${accuracy * 2 / duration * 100}%`
-          }}
+          accuracy={accuracy}
+          bpm={bpm}
+          bpmPos={bpmPos}
+          duration={duration}
+          event={event}
+          icon={icon}
         />
       );
-      bpmIncrement += event.delta;
+      bpmPos += event.delta;
       return area;
     });
   };
@@ -51,11 +52,9 @@ export default class Timeline extends React.PureComponent {
     const { children } = this.props ;
     return (
       <div className="Timeline">
+        {this.getEvents()}
+        {this.getTicks()}
         {children}
-        <div>
-          {this.getEvents()}
-          {this.getTicks()}
-        </div>
       </div>
     );
   }

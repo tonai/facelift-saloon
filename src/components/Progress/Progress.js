@@ -43,7 +43,9 @@ export default class Progress extends React.PureComponent {
     }
     const width = this.time / duration * 100;
     return (
-      <div className="Progress" style={{ width: `${width}%` }}/>
+      <div className="Progress">
+        <div className="Progress__bar" style={{ width: `${width}%` }}/>
+      </div>
     );
   }
 

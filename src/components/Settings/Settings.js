@@ -1,7 +1,7 @@
 import React from 'react';
 
+import { ICON_DIR } from '../../settings/settings';
 import GameGenerator from '../../classes/GameGenerator';
-import samples  from '../../settings/samples';
 
 import Header from '../Header/Header';
 import SampleLoader from '../SampleLoader/SampleLoader';
@@ -95,10 +95,6 @@ export default class Settings extends React.PureComponent {
     const { bpm, hits, start } = this.state;
     this.game = this.gameGenerator.settings(Math.max(GameGenerator.minBpm, Math.min(GameGenerator.maxBpm, bpm)));
 
-    const gameSamples = {
-      metronome: samples.toc
-    };
-
     return (
       <div className="Settings">
         <Header onHome={onHome} title="Settings" />
@@ -110,7 +106,7 @@ export default class Settings extends React.PureComponent {
           </div>
           <h2 className="Settings__title">Delay</h2>
           <div className="Settings__group">
-            {this.renderRow('Visual', 'delay')}
+            {this.renderRow('Visual delay', 'delay')}
           </div>
           <h2 className="Settings__title">Test</h2>
           <div className="Settings__group">
@@ -133,8 +129,8 @@ export default class Settings extends React.PureComponent {
               {!start && <button className="Settings__button" onClick={this.handleStart}>Launch test</button>}
               {start && <div className="Settings__text">hit any key</div>}
             </div>
-            <SampleLoader bpm={this.game.bpm} samples={Object.values(gameSamples)}>
-              {start && <Metronome bpm={this.game.bpm} sample={gameSamples.metronome}/>}
+            <SampleLoader bpm={this.game.bpm} samples={[Metronome.sample]}>
+              {start && <Metronome bpm={this.game.bpm}/>}
               <Timeline {...this.game}>
                 {start && <Progress {...this.game} visualDelay={settings.delay} start={start}/>}
                 {hits.map(hit => <Hit duration={this.game.duration} key={hit} time={hit} />)}
@@ -155,6 +151,13 @@ export default class Settings extends React.PureComponent {
 
   renderRow(label, name, isKey) {
     const { settings } = this.props;
+    if (isKey) {
+      label = (<img
+        className="Settings__icon"
+        src={`${ICON_DIR}${GameGenerator.icons[name]}`}
+        alt={name}
+      />);
+    }
     return (
       <div className="Settings__row">
         <div className="Settings__label">{label}</div>

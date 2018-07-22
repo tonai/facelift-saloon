@@ -4,7 +4,6 @@
   left: 0;
   right: 0;
   height: 50px;
-  overflow: hidden;
 }
 
 .Timeline__tick {
@@ -12,15 +11,8 @@
   height: 50px;
   width: 2px;
   top: 0;
-  background-color: white;
+  background-color: black;
   opacity: 0.3;
   margin-left: -1px;
-}
-
-.Timeline__event {
-  position: absolute;
-  height: 50px;
-  top: 0;
-  background-color: black;
-  opacity: 0.5;
+  z-index: 3;
 }
