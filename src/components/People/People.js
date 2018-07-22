@@ -70,6 +70,7 @@ export default class People extends React.PureComponent {
             {this.renderAsset(game.mouth.normal)}
             {game.hair && this.renderAsset(game.hair)}
             {this.renderHair(game, hitEvents)}
+            {this.renderBeard(game, hitEvents)}
           </div>
         </div>
         {enterAnimationEnd && !exitAnimation && !this.reset && children}
@@ -83,6 +84,13 @@ export default class People extends React.PureComponent {
         <img className="People__asset" src={`${ASSETS_DIR}${asset}`} alt="" />
       </div>
     );
+  }
+
+  renderBeard(game, hitEvents) {
+    const event = game.events
+      .filter(event => event.type === 'beard')
+      .find(event => hitEvents.indexOf(event) !== -1);
+    return event ? null : this.renderAsset(game.beard);
   }
 
   renderHair(game, hitEvents) {

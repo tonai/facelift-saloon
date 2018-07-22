@@ -103,6 +103,7 @@ export default class Settings extends React.PureComponent {
           <div className="Settings__group">
             {this.renderRow('Lifting', 'lifting', true)}
             {this.renderRow('Hair', 'hair', true)}
+            {this.renderRow('Beard', 'beard', true)}
           </div>
           <h2 className="Settings__title">Delay</h2>
           <div className="Settings__group">

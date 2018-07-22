@@ -19,7 +19,7 @@ export default class Game extends React.PureComponent {
   state = {
     exitAnimation: false,
     hits: [],
-    level: 1,
+    level: 3,
     play: false,
     round: 0,
   };

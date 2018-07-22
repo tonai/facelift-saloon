@@ -13,23 +13,27 @@ export default class GameGenerator {
   static maxEvent = 6;
 
   static colors = {
+    beard: 'green',
     hair: 'blue',
     lifting: 'red',
   };
 
   static icons = {
+    beard: 'beard.svg',
     hair: 'hair.svg',
     lifting: 'clothespin.svg',
     // wart: 'scalpel.svg',
   };
 
   static order = {
+    beard: 3,
     hair: 2,
     lifting: 1,
     // wart: 4
   };
 
   static samples = {
+    beard: 'Pop 03.wav',
     hair: 'Boing 07.wav',
     lifting: 'Reaction 08.wav',
   };
@@ -39,12 +43,13 @@ export default class GameGenerator {
     const accuracy = this.getInvertedLevelValue(level, GameGenerator.minAccuracy, GameGenerator.maxAccuracy);
     const bpm = this.getLevelValue(level, GameGenerator.minBpm, GameGenerator.maxBpm);
 
-    const { events, hasAir } = this.getEvents(level);
+    const { events, hasBeard, hasHair } = this.getEvents(level);
 
+    const beard = hasBeard && this.getBeard(level);
     const body = this.getBody(level);
     const face = this.getFace(level);
     const eyes = this.getEyes(level);
-    const hair = hasAir && this.getHair(level);
+    const hair = hasHair && this.getHair(level);
     const mouth = this.getMouth(level);
     const nose = this.getNose(level);
 
@@ -52,6 +57,7 @@ export default class GameGenerator {
 
     return {
       accuracy,
+      beard,
       body,
       bpm,
       duration,
@@ -64,6 +70,10 @@ export default class GameGenerator {
     };
   }
 
+  getBeard() {
+    return 'BeardA.png';
+  }
+
   getBody() {
     return 'BodyA.png';
   }
@@ -74,24 +84,29 @@ export default class GameGenerator {
     let liftingEvents = [];
     let hairEvents = [];
 
-    let hasAir = true;
+    let beardEvents = [];
+    let hasHair = true;
+    let hasBeard = true;
 
     switch(eventLength) {
       default:
       case 5: // eslint-disable-line no-fallthrough
       case 4: // eslint-disable-line no-fallthrough
       case 3: // eslint-disable-line no-fallthrough
+        hasBeard = Math.random() > 0.5;
+        beardEvents = hasBeard ? this.getEventBeard(level) : [];
       case 2: // eslint-disable-line no-fallthrough
-        hasAir = Math.random() > 0.5;
-        hairEvents = hasAir ? [] : this.getEventHair(level);
+        hasHair = Math.random() > 0.5;
+        hairEvents = hasHair ? [] : this.getEventHair(level);
       case 1: // eslint-disable-line no-fallthrough
         liftingEvents = this.getEventLifting(level);
         break;
     }
 
     return {
-      events: liftingEvents.concat(hairEvents),
-      hasAir
+      events: liftingEvents.concat(hairEvents).concat(beardEvents),
+      hasBeard,
+      hasHair
     };
   }
 
@@ -104,6 +119,7 @@ export default class GameGenerator {
       case 5: // eslint-disable-line no-fallthrough
       case 4: // eslint-disable-line no-fallthrough
       case 3: // eslint-disable-line no-fallthrough
+        events = events.concat(this.getEventBeard(level));
       case 2: // eslint-disable-line no-fallthrough
         events = events.concat(this.getEventHair(level));
       case 1: // eslint-disable-line no-fallthrough
@@ -125,6 +141,34 @@ export default class GameGenerator {
     };
   }
 
+  getEventBeard(level) {
+    return [
+      {
+        asset: 'BeardA.png',
+        color: GameGenerator.colors.beard,
+        delta: 1,
+        hit: false,
+        icon: GameGenerator.icons.beard,
+        sample: GameGenerator.samples.beard,
+        type: 'beard',
+      }
+    ];
+  }
+
+  getEventHair(level) {
+    return [
+      {
+        asset: 'HairA.png',
+        color: GameGenerator.colors.hair,
+        delta: 1,
+        hit: false,
+        icon: GameGenerator.icons.hair,
+        sample: GameGenerator.samples.hair,
+        type: 'hair',
+      }
+    ];
+  }
+
   getEventLifting(level) {
     return [
       {
@@ -144,20 +188,6 @@ export default class GameGenerator {
         icon: GameGenerator.icons.lifting,
         sample: GameGenerator.samples.lifting,
         type: 'lifting',
-      }
-    ];
-  }
-
-  getEventHair(level) {
-    return [
-      {
-        asset: 'HairA.png',
-        color: GameGenerator.colors.hair,
-        delta: 1,
-        hit: false,
-        icon: GameGenerator.icons.hair,
-        sample: GameGenerator.samples.hair,
-        type: 'hair',
       }
     ];
   }

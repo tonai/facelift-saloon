@@ -10,7 +10,8 @@ export default class App extends React.PureComponent {
     super(props);
     const defaultSettings = {
       delay: 0,
-      hait: 'Digit2',
+      beard: 'Digit3',
+      hair: 'Digit2',
       lifting: 'Digit1',
       // wart: 'Digit2'
     };
