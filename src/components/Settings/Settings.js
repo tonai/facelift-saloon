@@ -100,37 +100,31 @@ export default class Settings extends React.PureComponent {
         <Header onHome={onHome} title="Settings" />
         <div className="Settings__stage">
           <h2 className="Settings__title">Keys</h2>
-          <div className="Settings__group">
-            {this.renderRow('Facelift', 'facelift', true)}
-            {this.renderRow('Hair', 'hair', true)}
-            {this.renderRow('Beard', 'beard', true)}
-            {this.renderRow('Wart', 'wart', true)}
-          </div>
+          {this.renderRow('Facelift', 'facelift', true)}
+          {this.renderRow('Hair', 'hair', true)}
+          {this.renderRow('Beard', 'beard', true)}
+          {this.renderRow('Wart', 'wart', true)}
           <h2 className="Settings__title">Delay</h2>
-          <div className="Settings__group">
-            {this.renderRow('Visual delay', 'delay')}
-          </div>
+          {this.renderRow('Visual delay', 'delay')}
           <h2 className="Settings__title">Test</h2>
-          <div className="Settings__group">
-            <div className="Settings__row">
-              <div className="Settings__label">BPM</div>
-              <div className="Settings__field">
-                <input
-                  className="Settings__input"
-                  name="bpm"
-                  onChange={this.handleBpmChange}
-                  onBlur={this.handleBlur}
-                  min={GameGenerator.minBpm}
-                  max={GameGenerator.maxBpm}
-                  type="number"
-                  value={bpm}
-                />
-              </div>
+          <div className="Settings__row">
+            <div className="Settings__label">BPM</div>
+            <div className="Settings__field">
+              <input
+                className="Settings__input"
+                name="bpm"
+                onChange={this.handleBpmChange}
+                onBlur={this.handleBlur}
+                min={GameGenerator.minBpm}
+                max={GameGenerator.maxBpm}
+                type="number"
+                value={bpm}
+              />
             </div>
-            <div className="Settings__center">
-              {!start && <button className="Settings__button" onClick={this.handleStart}>Launch test</button>}
-              {start && <div className="Settings__text">hit any key</div>}
-            </div>
+          </div>
+          <div className="Settings__center">
+            {!start && <button className="Settings__button" onClick={this.handleStart}>Launch test</button>}
+            {start && <div className="Settings__text">hit any key</div>}
           </div>
         </div>
         <SampleLoader bpm={this.game.bpm} samples={[Metronome.sample]}>

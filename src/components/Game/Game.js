@@ -192,42 +192,40 @@ export default class Game extends React.PureComponent {
       <div className="Game">
         <Header onHome={onHome} score={score} title={`Level ${level}`} />
         <div className="Game__stage">
+          {!end && !play && <button className="Game__start" onClick={this.handleStart}> Are you ready ? </button>}
+          {!end && play && round && (
+            <People
+              exitAnimation={exitAnimation}
+              game={this.game}
+              hits={hits}
+              onAnimationEnd={this.handleExitAnimationEnd}
+            >
+              <Level
+                game={this.game}
+                hits={hits}
+                level={level}
+                onAction={this.handleAction}
+                onBufferLoad={this.handleBufferLoad}
+                onRoundStart={this.handleRoundStart}
+                settings={settings}
+                visualDelay={20}
+              />
+            </People>
+          )}
           {!end && (
-            <div>
-              {!play && <button className="Game__start" onClick={this.handleStart}> Are you ready ? </button>}
-              {play && round && (
-                <People
-                  exitAnimation={exitAnimation}
-                  game={this.game}
-                  hits={hits}
-                  onAnimationEnd={this.handleExitAnimationEnd}
-                >
-                  <Level
-                    game={this.game}
-                    hits={hits}
-                    level={level}
-                    onAction={this.handleAction}
-                    onBufferLoad={this.handleBufferLoad}
-                    onRoundStart={this.handleRoundStart}
-                    settings={settings}
-                    visualDelay={20}
-                  />
-                </People>
-              )}
-              <div className="Game__icons">
-                {this.getIcons().map(({ color, icon, name }) => (
-                  <div className="Game__icon-item" key={name}>
-                    <div className="Game__icon-content" onClick={this.handleClick.bind(this, name)}>
-                      <div className="Game__icon-bg" style={{ backgroundColor: color }}/>
-                      <img
-                        className="Game__icon"
-                        src={`${ICON_DIR}${icon}`}
-                        alt={name}
-                      />
-                    </div>
+            <div className="Game__icons">
+              {this.getIcons().map(({ color, icon, name }) => (
+                <div className="Game__icon-item" key={name}>
+                  <div className="Game__icon-content" onClick={this.handleClick.bind(this, name)}>
+                    <div className="Game__icon-bg" style={{ backgroundColor: color }}/>
+                    <img
+                      className="Game__icon"
+                      src={`${ICON_DIR}${icon}`}
+                      alt={name}
+                    />
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           )}
           {end && (
