@@ -34,6 +34,7 @@ export default class Game extends React.PureComponent {
     this.setState({
       round: 1
     });
+    window.addEventListener('keydown', this.handleKey);
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -45,6 +46,7 @@ export default class Game extends React.PureComponent {
 
   componentWillUnmount() {
     clearTimeout(this.timer);
+    window.removeEventListener('keydown', this.handleKey);
   }
 
   getIcons = () => {
@@ -83,6 +85,13 @@ export default class Game extends React.PureComponent {
     this.setState({
       exitAnimation: true
     });
+  };
+
+  handleKey = (event) => {
+    const { play } = this.state;
+    if (event.key === 'Enter' && !play) {
+      this.handleStart();
+    }
   };
 
   handleRoundStart = () => {

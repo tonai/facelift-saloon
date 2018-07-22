@@ -24,6 +24,7 @@ export default class Counter extends React.PureComponent {
     stop: false
   };
   timer = null;
+  timer2 = null;
 
   componentDidMount() {
     const { bpm } = this.props;
@@ -49,6 +50,7 @@ export default class Counter extends React.PureComponent {
 
   componentWillUnmount() {
     clearTimeout(this.timer);
+    clearTimeout(this.timer2);
   }
 
   componentWillUpdate(nextProps, nextstate) {
@@ -67,7 +69,7 @@ export default class Counter extends React.PureComponent {
     const { bpm } = this.props;
     const { counter } = this.state;
     if (counter > 0) {
-      this.timer = setTimeout(this.decrement, 60 / bpm * 1000);
+      this.timer2 = setTimeout(this.decrement, 60 / bpm * 1000);
     }
     this.setState(state => ({
       counter: state.counter - 1,
