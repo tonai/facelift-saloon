@@ -3,11 +3,11 @@ export default class GameGenerator {
   static minLevel = 1;
   static maxLevel = 10;
 
-  static minAccuracy = 50;
-  static maxAccuracy = 100;
+  static minAccuracy = 70;
+  static maxAccuracy = 90;
 
-  static minBpm = 80;
-  static maxBpm = 160;
+  static minBpm = 100;
+  static maxBpm = 200;
 
   static minEvent = 1;
   static maxEvent = 6;
@@ -16,7 +16,7 @@ export default class GameGenerator {
     beard: 'green',
     hair: 'blue',
     lifting: 'red',
-    wart: 'yellow',
+    wart: 'orange',
   };
 
   static icons = {
@@ -55,7 +55,10 @@ export default class GameGenerator {
     const mouth = this.getMouth(level);
     const nose = this.getNose(level);
 
-    const duration = (events.length + 1) * 60 / bpm * 1000;
+    const length = events
+      .map(event => event.delta)
+      .reduce((a, b, index) => index === events.length - 1 && b === 0.5 ? a +b + 0.5 : (a + b), 0);
+    const duration = (length + 1) * 60 / bpm * 1000;
 
     return {
       accuracy,
@@ -89,17 +92,17 @@ export default class GameGenerator {
     let wartEvents = [];
 
     let hasHair = true;
-    let hasBeard = true;
+    let hasBeard = false;
 
     switch(eventLength) {
       default:
       case 4: // eslint-disable-line no-fallthrough
         wartEvents = this.getEventWart(level);
       case 3: // eslint-disable-line no-fallthrough
-        hasBeard = Math.random() > 0.5;
+        hasBeard = Math.random() > this.getLevelValue(level, 0.5, 0.1);
         beardEvents = hasBeard ? this.getEventBeard(level) : [];
       case 2: // eslint-disable-line no-fallthrough
-        hasHair = Math.random() > 0.5;
+        hasHair = Math.random() > this.getLevelValue(level, 0.5, 0.1);
         hairEvents = hasHair ? [] : this.getEventHair(level);
       case 1: // eslint-disable-line no-fallthrough
         liftingEvents = this.getEventLifting(level);
@@ -107,13 +110,59 @@ export default class GameGenerator {
     }
 
     return {
-      events: liftingEvents
-        .concat(hairEvents)
-        .concat(beardEvents)
-        .concat(wartEvents),
+      events: this.getEventsMix(level, liftingEvents, hairEvents, beardEvents, wartEvents),
       hasBeard,
       hasHair
     };
+  }
+
+  getEventsMix(level, liftingEvents, hairEvents, beardEvents, wartEvents) {
+    if (level < 6) {
+      return liftingEvents.concat(hairEvents).concat(beardEvents).concat(wartEvents);
+    } else if (level === 6) {
+      const random = Math.random();
+      if (random > 0.75) {
+        return liftingEvents.concat(hairEvents).concat(beardEvents).concat(wartEvents);
+      } else if (random > 0.5) {
+        return beardEvents.concat(hairEvents).concat(liftingEvents).concat(wartEvents);
+      } else if (random > 0.5) {
+        return hairEvents.concat(beardEvents).concat(liftingEvents).concat(wartEvents);
+      } else {
+        return liftingEvents.concat(beardEvents).concat(hairEvents).concat(wartEvents);
+      }
+    } else if (level === 7) {
+      return this.getEventsRandom([liftingEvents, hairEvents, beardEvents, wartEvents]);
+    } else if (level === 8) {
+      return this.getEventsRandom(liftingEvents.concat(hairEvents).concat(beardEvents).concat(wartEvents));
+    } else {
+      const events = this.getEventsRandom(liftingEvents.concat(hairEvents).concat(beardEvents).concat(wartEvents));
+      return events.map(event => ({
+        ...event,
+        delta: Math.random() > 0.5 ? 0.5 : 1
+      }));
+    }
+  }
+
+  getEventsRandom(groups) {
+    let events;
+    const random = Math.random();
+    for (let i = groups.length - 1; i > 0; i--) {
+      if (random >= i/groups.length && random < (i + 1)/groups.length) {
+        events = groups.splice(i, 1)[0];
+        break;
+      }
+    }
+    if (!events) {
+      events = groups.splice(0, 1)[0];
+    }
+    if (groups.length > 0) {
+      if (events instanceof Array) {
+        events = events.concat(this.getEventsRandom(groups));
+      } else {
+        events = [events].concat(this.getEventsRandom(groups));
+      }
+    }
+    return events;
   }
 
   getEventsDistinct(level) {
@@ -203,7 +252,7 @@ export default class GameGenerator {
     const wartA = {
       asset: 'WartA.png',
       color: GameGenerator.colors.wart,
-      delta: 1,
+      delta: level === 4 ? 1 : 0.5,
       hit: false,
       icon: GameGenerator.icons.wart,
       sample: GameGenerator.samples.wart,
@@ -212,7 +261,7 @@ export default class GameGenerator {
     const wartB = {
       asset: 'WartB.png',
       color: GameGenerator.colors.wart,
-      delta: 1,
+      delta: level === 4 ? 1 : 0.5,
       hit: false,
       icon: GameGenerator.icons.wart,
       sample: GameGenerator.samples.wart,
@@ -221,15 +270,15 @@ export default class GameGenerator {
     const wartC = {
       asset: 'WartC.png',
       color: GameGenerator.colors.wart,
-      delta: 1,
+      delta: level === 4 ? 1 : 0.5,
       hit: false,
       icon: GameGenerator.icons.wart,
       sample: GameGenerator.samples.wart,
       type: 'wart',
     };
-    if (random > 0.8) {
+    if (random > this.getLevelValue(level, 0.8, 0.5)) {
       return [wartA, wartB, wartC];
-    } else if (random > 0.6) {
+    } else if (random > this.getLevelValue(level, 0.6, 0.3)) {
       const random = Math.random();
       if (random > 0.666) {
         return [wartA, wartB];
@@ -237,7 +286,7 @@ export default class GameGenerator {
         return [wartA, wartC];
       }
       return [wartB, wartC];
-    } else if (random > 0.4) {
+    } else if (random > this.getLevelValue(level, 0.4, 0.1)) {
       const random = Math.random();
       if (random > 0.666) {
         return [wartA];

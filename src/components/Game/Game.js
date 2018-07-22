@@ -17,12 +17,12 @@ export default class Game extends React.PureComponent {
   game = null;
   gameGenerator = null;
   maxLevel = 9;
-  rounds = 2;
+  rounds = 5;
   start = 0;
   state = {
     exitAnimation: false,
     hits: [],
-    level: 3,
+    level: 9,
     play: false,
     round: 0,
   };

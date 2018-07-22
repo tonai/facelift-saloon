@@ -35,7 +35,7 @@ export default class Timeline extends React.PureComponent {
 
   getTicks = () => {
     const { bpm, duration } = this.props;
-    const delta = 60 / bpm * 1000;
+    const delta = 60 / bpm * 1000 / 2;
     const ticks = Math.floor(duration / delta) - 1;
 
     return Array.apply(null, new Array(ticks))
