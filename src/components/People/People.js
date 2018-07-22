@@ -66,8 +66,8 @@ export default class People extends React.PureComponent {
             {game.face && this.renderAsset(game.face)}
             {this.renderWrinkles(game, hitEvents)}
             {game.nose && this.renderAsset(game.nose)}
-            {this.renderAsset(game.eyes.normal)}
-            {this.renderAsset(game.mouth.normal)}
+            {this.renderEyes(game, hitEvents, exitAnimation)}
+            {this.renderMouth(game, hitEvents, exitAnimation)}
             {game.hair && this.renderAsset(game.hair)}
             {this.renderWart(game, hitEvents)}
             {this.renderHair(game, hitEvents)}
@@ -94,11 +94,31 @@ export default class People extends React.PureComponent {
     return event ? null : this.renderAsset(game.beard);
   }
 
+  renderEyes(game, hitEvents, exitAnimation) {
+    const hits = hitEvents.filter(event => event && event.hit !== false).length;
+    if (hits === game.events.length) {
+      return this.renderAsset(game.eyes.happy);
+    } else if (hits <= game.events.length / 2 && exitAnimation) {
+      return this.renderAsset(game.eyes.angry);
+    }
+    return this.renderAsset(game.eyes.normal);
+  }
+
   renderHair(game, hitEvents) {
     const event = game.events
       .filter(event => event.type === 'hair')
       .find(event => hitEvents.indexOf(event) !== -1);
     return event ? this.renderAsset(event.asset) : null;
+  }
+
+  renderMouth(game, hitEvents, exitAnimation) {
+    const hits = hitEvents.filter(event => event && event.hit !== false).length;
+    if (hits === game.events.length) {
+      return this.renderAsset(game.mouth.happy);
+    } else if (hits <= game.events.length / 2 && exitAnimation) {
+      return this.renderAsset(game.mouth.angry);
+    }
+    return this.renderAsset(game.mouth.normal);
   }
 
   renderWart(game, hitEvents) {
