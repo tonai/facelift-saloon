@@ -129,22 +129,22 @@ export default class Settings extends React.PureComponent {
               {!start && <button className="Settings__button" onClick={this.handleStart}>Launch test</button>}
               {start && <div className="Settings__text">hit any key</div>}
             </div>
-            <SampleLoader bpm={this.game.bpm} samples={[Metronome.sample]}>
-              {start && <Metronome bpm={this.game.bpm}/>}
-              <Timeline {...this.game}>
-                {start && <Progress {...this.game} visualDelay={settings.delay} start={start}/>}
-                {hits.map(hit => <Hit duration={this.game.duration} key={hit} time={hit} />)}
-              </Timeline>
-              {start && (
-                <Action
-                  {...this.game}
-                  onAction={this.handleAction}
-                  start={start}
-                />
-              )}
-            </SampleLoader>
           </div>
         </div>
+        <SampleLoader bpm={this.game.bpm} samples={[Metronome.sample]}>
+          {start && <Metronome bpm={this.game.bpm}/>}
+          <Timeline {...this.game}>
+            {start && <Progress {...this.game} visualDelay={settings.delay} start={start}/>}
+            {hits.map(hit => <Hit duration={this.game.duration} key={hit} time={hit} />)}
+          </Timeline>
+          {start && (
+            <Action
+              {...this.game}
+              onAction={this.handleAction}
+              start={start}
+            />
+          )}
+        </SampleLoader>
       </div>
     );
   }

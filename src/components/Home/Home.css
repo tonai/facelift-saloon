@@ -52,3 +52,13 @@
   text-decoration: underline;
   outline: none;
 }
+
+@media (max-width: 650px) {
+  .Home__title {
+    font-size: 75px;
+  }
+
+  .Home__menu-link {
+    font-size: 40px;
+  }
+}

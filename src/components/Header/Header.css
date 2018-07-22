@@ -39,3 +39,18 @@
 .Header__score {
   font-size: 30px;
 }
+
+@media (max-width: 650px) {
+  .Header {
+    padding: 10px;
+  }
+
+  .Header__title {
+    font-size: 30px;
+  }
+
+  .Header__prev,
+  .Header__score {
+    font-size: 20px;
+  }
+}
