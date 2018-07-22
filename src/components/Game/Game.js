@@ -20,9 +20,10 @@ export default class Game extends React.PureComponent {
   rounds = 5;
   start = 0;
   state = {
+    end: false,
     exitAnimation: false,
     hits: [],
-    level: 9,
+    level: 1,
     play: false,
     round: 0,
   };
@@ -123,10 +124,25 @@ export default class Game extends React.PureComponent {
   };
 
   handleKey = (event) => {
-    const { play } = this.state;
-    if (event.key === 'Enter' && !play) {
-      this.handleStart();
+    const { end, play } = this.state;
+    if (event.key === 'Enter') {
+      if (end) {
+        this.handleRestart();
+      } else if (!play) {
+        this.handleStart();
+      }
     }
+  };
+
+  handleRestart = () => {
+    this.setState({
+      end: false,
+      exitAnimation: false,
+      hits: [],
+      level: 1,
+      play: false,
+      round: 1,
+    });
   };
 
   handleRoundStart = (start) => {
@@ -150,6 +166,10 @@ export default class Game extends React.PureComponent {
         play: false,
         round: 1
       }));
+    } else if (level === this.maxLevel) {
+      this.setState({
+        end: true
+      });
     }
   };
 
@@ -166,46 +186,57 @@ export default class Game extends React.PureComponent {
 
   render() {
     const { onHome, score, settings } = this.props;
-    const { exitAnimation, hits, level, play, round } = this.state;
+    const { end, exitAnimation, hits, level, play, round } = this.state;
 
     return (
       <div className="Game">
         <Header onHome={onHome} score={score} title={`Level ${level}`} />
         <div className="Game__stage">
-          {!play && <button className="Game__start" onClick={this.handleStart}> Are you ready ? </button>}
-          {play && round && (
-            <People
-              exitAnimation={exitAnimation}
-              game={this.game}
-              hits={hits}
-              onAnimationEnd={this.handleExitAnimationEnd}
-            >
-              <Level
-                game={this.game}
-                hits={hits}
-                level={level}
-                onAction={this.handleAction}
-                onBufferLoad={this.handleBufferLoad}
-                onRoundStart={this.handleRoundStart}
-                settings={settings}
-                visualDelay={20}
-              />
-            </People>
-          )}
-          <div className="Game__icons">
-            {this.getIcons().map(({ color, icon, name }) => (
-              <div className="Game__icon-item" key={name}>
-                <div className="Game__icon-content" onClick={this.handleClick.bind(this, name)}>
-                  <div className="Game__icon-bg" style={{ backgroundColor: color }}/>
-                  <img
-                    className="Game__icon"
-                    src={`${ICON_DIR}${icon}`}
-                    alt={name}
+          {!end && (
+            <div>
+              {!play && <button className="Game__start" onClick={this.handleStart}> Are you ready ? </button>}
+              {play && round && (
+                <People
+                  exitAnimation={exitAnimation}
+                  game={this.game}
+                  hits={hits}
+                  onAnimationEnd={this.handleExitAnimationEnd}
+                >
+                  <Level
+                    game={this.game}
+                    hits={hits}
+                    level={level}
+                    onAction={this.handleAction}
+                    onBufferLoad={this.handleBufferLoad}
+                    onRoundStart={this.handleRoundStart}
+                    settings={settings}
+                    visualDelay={20}
                   />
-                </div>
+                </People>
+              )}
+              <div className="Game__icons">
+                {this.getIcons().map(({ color, icon, name }) => (
+                  <div className="Game__icon-item" key={name}>
+                    <div className="Game__icon-content" onClick={this.handleClick.bind(this, name)}>
+                      <div className="Game__icon-bg" style={{ backgroundColor: color }}/>
+                      <img
+                        className="Game__icon"
+                        src={`${ICON_DIR}${icon}`}
+                        alt={name}
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          )}
+          {end && (
+            <div className="Game__end">
+              <div className="Game__end-title">Game over</div>
+              <div className="Game__score">Score: {score}</div>
+              <button className="Game__restart" onClick={this.handleRestart}>Restart</button>
+            </div>
+          )}
         </div>
       </div>
     );
