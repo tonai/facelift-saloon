@@ -1,0 +1,54 @@
+.Home__title-area {
+  position: absolute;
+  text-align: center;
+  top: 0;
+  bottom: 50%;
+  left: 0;
+  right: 0;
+}
+
+.Home__title {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  margin: 0;
+  font-weight: bold;
+  font-size: 150px;
+  line-height: 1em;
+}
+
+.Home__menu {
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Home__menu-link {
+  color: inherit;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 80px;
+  line-height: 1.5em;
+}
+
+.Home__menu:hover .Home__menu-link {
+  text-decoration: none;
+}
+
+.Home__menu .Home__menu-link:hover,
+.Home__menu .Home__menu-link:focus,
+.Home__menu-link.active {
+  color: inherit;
+  text-decoration: underline;
+  outline: none;
+}

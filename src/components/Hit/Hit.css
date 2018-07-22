@@ -1,0 +1,9 @@
+.Hit {
+  position: absolute;
+  height: 50px;
+  width: 4px;
+  top: 0;
+  background-color: black;
+  opacity: 0.8;
+  margin-left: -1px;
+}

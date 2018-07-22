@@ -1,0 +1,41 @@
+.Header {
+  position: absolute;
+  top: 0;
+  height: 80px;
+  left: 0;
+  right: 0;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  border-bottom: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Header__prev {
+  font-size: 30px;
+  color: inherit;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+.Header__prev:hover {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.Header__title {
+  font-size: 60px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.Header__score {
+  font-size: 30px;
+}
