@@ -1,6 +1,5 @@
 import BufferLoader from './BufferLoader';
 
-// ['/samples/E808_CL-01.wav']
 export default class AudioContext {
 
   context = null;

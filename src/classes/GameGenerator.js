@@ -34,8 +34,8 @@ export default class GameGenerator {
   };
 
   static samples = {
-    beard: 'Pop 03.wav',
-    facelift: 'Reaction 08.wav',
+    beard: 'Whip it.wav',
+    facelift: 'Gurgle 01.wav',
     hair: 'Boing 07.wav',
     wart: 'Pop 03.wav',
   };
