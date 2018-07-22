@@ -62,28 +62,14 @@ export default class People extends React.PureComponent {
             className={`People__animation ${enterAnimationStart ? 'enter' : ''} ${exitAnimation ? 'exit' : ''}`}
             style={{ transition: this.reset ? 'none' : `all ${this.animationDuration}ms linear` }}
           >
-            <div className="People__asset-content">
-              <img className="People__asset" src={`${ASSETS_DIR}${game.body}`} alt="body" />
-            </div>
-            <div className="People__asset-content">
-              <img className="People__asset" src={`${ASSETS_DIR}${game.face}`} alt="face" />
-            </div>
+            {game.body && this.renderAsset(game.body)}
+            {game.face && this.renderAsset(game.face)}
             {this.renderWrinkles(game, hitEvents)}
-            <div className="People__asset-content">
-              <img className="People__asset" src={`${ASSETS_DIR}${game.nose}`} alt="nose" />
-            </div>
-            <div className="People__asset-content">
-              <img className="People__asset" src={`${ASSETS_DIR}${game.eyes.normal}`} alt="eyes" />
-            </div>
-            <div className="People__asset-content">
-              <img className="People__asset" src={`${ASSETS_DIR}${game.mouth.normal}`} alt="mouth" />
-            </div>
-            <div className="People__asset-content">
-              <img className="People__asset" src={`${ASSETS_DIR}${game.eyes.normal}`} alt="eyes" />
-            </div>
-            <div className="People__asset-content">
-              <img className="People__asset" src={`${ASSETS_DIR}${game.hair}`} alt="hair" />
-            </div>
+            {game.nose && this.renderAsset(game.nose)}
+            {this.renderAsset(game.eyes.normal)}
+            {this.renderAsset(game.mouth.normal)}
+            {game.hair && this.renderAsset(game.hair)}
+            {this.renderHair(game, hitEvents)}
           </div>
         </div>
         {enterAnimationEnd && !exitAnimation && !this.reset && children}
@@ -91,15 +77,26 @@ export default class People extends React.PureComponent {
     );
   }
 
+  renderAsset(asset, key) {
+    return (
+      <div key={key} className="People__asset-content">
+        <img className="People__asset" src={`${ASSETS_DIR}${asset}`} alt="" />
+      </div>
+    );
+  }
+
+  renderHair(game, hitEvents) {
+    const event = game.events
+      .filter(event => event.type === 'hair')
+      .find(event => hitEvents.indexOf(event) !== -1);
+    return event ? this.renderAsset(event.asset) : null;
+  }
+
   renderWrinkles(game, hitEvents) {
     return game.events
       .filter(event => event.type === 'lifting')
       .filter(event => hitEvents.indexOf(event) === -1)
-      .map((event, index) => (
-        <div key={index} className="People__asset-content">
-          <img className="People__asset" src={`${ASSETS_DIR}${event.asset}`} alt="wrinkles" />
-        </div>
-      ));
+      .map((event, index) => this.renderAsset(event.asset, index));
   }
 
 }

@@ -10,8 +10,9 @@ export default class App extends React.PureComponent {
     super(props);
     const defaultSettings = {
       delay: 0,
+      hait: 'Digit2',
       lifting: 'Digit1',
-      wart: 'Digit2'
+      // wart: 'Digit2'
     };
     const settings = this.getSettings();
     this.state = {
@@ -22,7 +23,7 @@ export default class App extends React.PureComponent {
   }
 
   getScore(level, accuracy, timeDelta) {
-    return Math.round(level * (1000 - 600 * timeDelta / accuracy));
+    return Math.round(1000 - 600 * timeDelta / accuracy);
   }
 
   getSettings() {

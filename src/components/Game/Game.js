@@ -49,14 +49,13 @@ export default class Game extends React.PureComponent {
 
   getIcons = () => {
     const { level } = this.state;
-    const icons = this.gameGenerator.getEventsDistinct(level)
+    return this.gameGenerator.getEventsDistinct(level)
       .sort((a, b) => GameGenerator.order[a] - GameGenerator.order[b])
       .map(name => ({
         color: GameGenerator.colors[name],
         icon: GameGenerator.icons[name],
         name
       }));
-    return icons;
   };
 
   handleAction = (event, time, level, accuracy, timeDelta) => {
