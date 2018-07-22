@@ -9,7 +9,6 @@ export default class Action extends React.PureComponent {
     bpm: 100,
     buffers: {},
     events: [],
-    lifting: null,
     start: 0
   };
 

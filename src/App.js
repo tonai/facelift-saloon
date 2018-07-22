@@ -11,8 +11,8 @@ export default class App extends React.PureComponent {
     const defaultSettings = {
       delay: 0,
       beard: 'Digit3',
+      facelift: 'Digit1',
       hair: 'Digit2',
-      lifting: 'Digit1',
       wart: 'Digit4'
     };
     const settings = this.getSettings();

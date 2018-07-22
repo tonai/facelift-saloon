@@ -101,7 +101,7 @@ export default class Settings extends React.PureComponent {
         <div className="Settings__stage">
           <h2 className="Settings__title">Keys</h2>
           <div className="Settings__group">
-            {this.renderRow('Lifting', 'lifting', true)}
+            {this.renderRow('Facelift', 'facelift', true)}
             {this.renderRow('Hair', 'hair', true)}
             {this.renderRow('Beard', 'beard', true)}
             {this.renderRow('Wart', 'wart', true)}

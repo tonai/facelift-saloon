@@ -14,29 +14,29 @@ export default class GameGenerator {
 
   static colors = {
     beard: 'green',
+    facelift: 'red',
     hair: 'blue',
-    lifting: 'red',
     wart: 'orange',
   };
 
   static icons = {
     beard: 'beard.svg',
+    facelift: 'clothespin.svg',
     hair: 'hair.svg',
-    lifting: 'clothespin.svg',
     wart: 'scalpel.svg',
   };
 
   static order = {
     beard: 3,
+    facelift: 1,
     hair: 2,
-    lifting: 1,
     wart: 4,
   };
 
   static samples = {
     beard: 'Pop 03.wav',
+    facelift: 'Reaction 08.wav',
     hair: 'Boing 07.wav',
-    lifting: 'Reaction 08.wav',
     wart: 'Pop 03.wav',
   };
 
@@ -87,7 +87,7 @@ export default class GameGenerator {
     const eventLength = Math.max(GameGenerator.minEvent, Math.min(GameGenerator.maxEvent, level));
 
     let beardEvents = [];
-    let liftingEvents = [];
+    let faceliftEvents = [];
     let hairEvents = [];
     let wartEvents = [];
 
@@ -105,37 +105,37 @@ export default class GameGenerator {
         hasHair = Math.random() > this.getLevelValue(level, 0.5, 0.1);
         hairEvents = hasHair ? [] : this.getEventHair(level);
       case 1: // eslint-disable-line no-fallthrough
-        liftingEvents = this.getEventLifting(level);
+        faceliftEvents = this.getEventFacelift(level);
         break;
     }
 
     return {
-      events: this.getEventsMix(level, liftingEvents, hairEvents, beardEvents, wartEvents),
+      events: this.getEventsMix(level, faceliftEvents, hairEvents, beardEvents, wartEvents),
       hasBeard,
       hasHair
     };
   }
 
-  getEventsMix(level, liftingEvents, hairEvents, beardEvents, wartEvents) {
+  getEventsMix(level, faceliftEvents, hairEvents, beardEvents, wartEvents) {
     if (level < 6) {
-      return liftingEvents.concat(hairEvents).concat(beardEvents).concat(wartEvents);
+      return faceliftEvents.concat(hairEvents).concat(beardEvents).concat(wartEvents);
     } else if (level === 6) {
       const random = Math.random();
       if (random > 0.75) {
-        return liftingEvents.concat(hairEvents).concat(beardEvents).concat(wartEvents);
+        return faceliftEvents.concat(hairEvents).concat(beardEvents).concat(wartEvents);
       } else if (random > 0.5) {
-        return beardEvents.concat(hairEvents).concat(liftingEvents).concat(wartEvents);
+        return beardEvents.concat(hairEvents).concat(faceliftEvents).concat(wartEvents);
       } else if (random > 0.5) {
-        return hairEvents.concat(beardEvents).concat(liftingEvents).concat(wartEvents);
+        return hairEvents.concat(beardEvents).concat(faceliftEvents).concat(wartEvents);
       } else {
-        return liftingEvents.concat(beardEvents).concat(hairEvents).concat(wartEvents);
+        return faceliftEvents.concat(beardEvents).concat(hairEvents).concat(wartEvents);
       }
     } else if (level === 7) {
-      return this.getEventsRandom([liftingEvents, hairEvents, beardEvents, wartEvents]);
+      return this.getEventsRandom([faceliftEvents, hairEvents, beardEvents, wartEvents]);
     } else if (level === 8) {
-      return this.getEventsRandom(liftingEvents.concat(hairEvents).concat(beardEvents).concat(wartEvents));
+      return this.getEventsRandom(faceliftEvents.concat(hairEvents).concat(beardEvents).concat(wartEvents));
     } else {
-      const events = this.getEventsRandom(liftingEvents.concat(hairEvents).concat(beardEvents).concat(wartEvents));
+      const events = this.getEventsRandom(faceliftEvents.concat(hairEvents).concat(beardEvents).concat(wartEvents));
       return events.map(event => ({
         ...event,
         delta: Math.random() > 0.5 ? 0.5 : 1
@@ -178,7 +178,7 @@ export default class GameGenerator {
       case 2: // eslint-disable-line no-fallthrough
         events = events.concat(this.getEventHair(level));
       case 1: // eslint-disable-line no-fallthrough
-        return events.concat(this.getEventLifting(level))
+        return events.concat(this.getEventFacelift(level))
           .reduce((acc, event) => {
             if (acc.indexOf(event.type) === -1) {
               acc = acc.concat(event.type);
@@ -224,25 +224,25 @@ export default class GameGenerator {
     ];
   }
 
-  getEventLifting(level) {
+  getEventFacelift(level) {
     return [
       {
         asset: 'WrinklesLeftA.png',
-        color: GameGenerator.colors.lifting,
+        color: GameGenerator.colors.facelift,
         delta: 1,
         hit: false,
-        icon: GameGenerator.icons.lifting,
-        sample: GameGenerator.samples.lifting,
-        type: 'lifting',
+        icon: GameGenerator.icons.facelift,
+        sample: GameGenerator.samples.facelift,
+        type: 'facelift',
       },
       {
         asset: 'WrinklesRightA.png',
-        color: GameGenerator.colors.lifting,
+        color: GameGenerator.colors.facelift,
         delta: 1,
         hit: false,
-        icon: GameGenerator.icons.lifting,
-        sample: GameGenerator.samples.lifting,
-        type: 'lifting',
+        icon: GameGenerator.icons.facelift,
+        sample: GameGenerator.samples.facelift,
+        type: 'facelift',
       }
     ];
   }
@@ -330,10 +330,10 @@ export default class GameGenerator {
     const level = 1;
     const accuracy = this.getInvertedLevelValue(level, GameGenerator.minAccuracy, GameGenerator.maxAccuracy);
     const events = [
-      ...this.getEventLifting(level),
-      ...this.getEventLifting(level),
-      ...this.getEventLifting(level),
-      ...this.getEventLifting(level)
+      ...this.getEventFacelift(level),
+      ...this.getEventFacelift(level),
+      ...this.getEventFacelift(level),
+      ...this.getEventFacelift(level)
     ];
     const duration = (events.length + 1) * 60 / bpm * 1000;
     return {

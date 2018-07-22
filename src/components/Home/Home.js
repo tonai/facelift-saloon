@@ -63,7 +63,7 @@ export default class Home extends React.PureComponent {
     return (
       <div className="Home">
         <div className="Home__title-area">
-          <h1 className="Home__title">Lifting saloon</h1>
+          <h1 className="Home__title">Facelift saloon</h1>
         </div>
         <div className="Home__menu">
           <button

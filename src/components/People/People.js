@@ -130,7 +130,7 @@ export default class People extends React.PureComponent {
 
   renderWrinkles(game, hitEvents) {
     return game.events
-      .filter(event => event.type === 'lifting')
+      .filter(event => event.type === 'facelift')
       .filter(event => hitEvents.indexOf(event) === -1)
       .map((event, index) => this.renderAsset(event.asset, index));
   }
