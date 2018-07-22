@@ -9,19 +9,44 @@ import Header from '../Header/Header';
 import './Game.css';
 export default class Game extends React.PureComponent {
 
+  game = null;
   gameGenerator = null;
   maxLevel = 9;
   rounds = 1;
   state = {
     level: 1,
-    play: false
+    play: false,
+    round: 0
   };
+  timer = null;
 
   constructor(props) {
     super(props);
     this.gameGenerator = new GameGenerator();
   }
 
+  componentDidMount() {
+    this.setState({
+      round: 1
+    });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.round === this.rounds && this.state.round > this.rounds) {
+      this.handleNextLevel();
+    }
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    const { level, round } = this.state;
+    if (nextState.round !== round) {
+      this.game = this.gameGenerator.generate(level);
+    }
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
 
   getIcons = () => {
     const { level } = this.state;
@@ -40,9 +65,14 @@ export default class Game extends React.PureComponent {
     if (level < this.maxLevel) {
       this.setState(state => ({
         level: state.level + 1,
-        play: false
+        play: false,
+        round: 1
       }));
     }
+  };
+
+  handleRoundStart = () => {
+    this.timer = setTimeout(this.nextRound, this.game.duration);
   };
 
   handleStart = () => {
@@ -51,27 +81,30 @@ export default class Game extends React.PureComponent {
     });
   };
 
-  handleStop = () => {
-    this.setState({
-      play: false
-    });
+
+  nextRound = () => {
+    const { round } = this.state;
+    if ( round <= this.rounds ) {
+      this.setState(state => ({
+        round: state.round + 1
+      }));
+    }
   };
 
   render() {
     const { onHome, onScore, score, settings } = this.props;
-    const { level, play } = this.state;
+    const { level, play, round } = this.state;
 
     return (
       <div className="Game">
         <Header onHome={onHome} score={score} title={`Level ${level}`} />
         <div className="Game__stage">
           {!play && <button className="Game__start" onClick={this.handleStart}> Are you ready ? </button>}
-          {/*play && <button onClick={this.handleStop}> stop game </button>*/}
-          {play && <Level
+          {play && round && round <= this.rounds &&  <Level
+            game={this.game}
             level={level}
-            rounds={this.rounds}
-            onNextLevel={this.handleNextLevel}
             onScore={onScore}
+            onRoundStart={this.handleRoundStart}
             settings={settings}
             visualDelay={20}
           />}
