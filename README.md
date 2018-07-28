@@ -1,8 +1,12 @@
 # Facelift saloon
 
-# Description
+## Description
 
 This project is a little browser game made for a game jam. 
+
+## Demo
+
+Live demo can be found [here](https://tonai.github.io/facelift-saloon/).
 
 ## Credits
 
